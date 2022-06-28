@@ -6,16 +6,20 @@ import java.util.TreeMap;
 public class Equation {
 	private final NavigableMap<Integer, Polynomial> polynomials = new TreeMap<>();
 	private int maxDegree = 0;
+	private int minDegree = 0;
 
 	public void add(Polynomial polynomial) {
 		int degree = polynomial.getDegree();
+		if (minDegree > degree) minDegree = degree;
 		if (maxDegree < degree) maxDegree = degree;
 		if (polynomials.containsKey(degree)) polynomials.get(degree).add(polynomial);
 		else polynomials.put(degree, polynomial);
 	}
 
 	public String getSolution() {
-		if (maxDegree > 2) return "The polynomial degree is strictly greater than 2, I can't solve";
+		if (maxDegree < 0) return "The polynomial degree is strictly less than 0, I can't solve";
+		else if (maxDegree > 2) return "The polynomial degree is strictly greater than 2, I can't solve";
+
 		Polynomial def = new Polynomial();
 		float a = polynomials.getOrDefault(2, def).getFactor();
 		float b = polynomials.getOrDefault(1, def).getFactor();
