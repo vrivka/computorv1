@@ -1,23 +1,42 @@
 package com.app;
 
 public class Polynomial {
-	private boolean negative;
-	private float factor;
-	private final int degree;
+	private int degree = 0;
+	private float factor = 0;
+	private boolean negative = false;
+
+	public Polynomial() {}
 
 	public Polynomial(float factor, int degree) {
-		this.negative = factor < 0;
-		this.factor = factor;
 		this.degree = degree;
+		this.factor = factor;
+		this.negative = factor < 0;
 	}
 
 	public void add(Polynomial rhs) {
+		if (degree != rhs.degree) return ;
 		factor += rhs.factor;
+		negative = factor < 0;
+	}
+
+	public void multi(Polynomial rhs) {
+		degree += rhs.degree;
+		factor *= rhs.factor;
+		negative = factor < 0;
+	}
+
+	public void div(Polynomial rhs) {
+		degree -= rhs.degree;
+		factor /= rhs.factor;
 		negative = factor < 0;
 	}
 
 	public float getFactor() {
 		return factor;
+	}
+
+	public int getDegree() {
+		return degree;
 	}
 
 	public boolean isSameDegree(Polynomial p) {
@@ -28,8 +47,29 @@ public class Polynomial {
 		return negative;
 	}
 
+	public boolean isEmpty() {
+		return factor == 0;
+	}
+
+	public String getSign() {
+		return isNegative() ? "-" : "+";
+	}
+
 	@Override
 	public String toString() {
-		return (isNegative() ? -factor : factor) + " * " + Main.variable_name + "^" + degree;
+		if (isEmpty()) return "";
+		StringBuilder res = new StringBuilder();
+		float f = isNegative() ? -factor : factor;
+
+		if (degree == 0) {
+			res.append(f);
+		} else if (degree == 1) {
+			if (f != 1) res.append(f);
+			res.append(Main.variable_name);
+		} else {
+			if (f != 1) res.append(f);
+			res.append(Main.variable_name).append("^").append(degree);
+		}
+		return res.toString();
 	}
 }

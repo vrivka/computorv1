@@ -1,67 +1,44 @@
 package com.app;
 
-public class Equation {
-	private final Polynomial a = new Polynomial(0, 2);
-	private final Polynomial b = new Polynomial(0, 1);
-	private final Polynomial c = new Polynomial(0, 0);
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
-	public void add(Polynomial p) {
-		if (a.isSameDegree(p)) a.add(p);
-		else if (b.isSameDegree(p)) b.add(p);
-		else if (c.isSameDegree(p)) c.add(p);
+public class Equation {
+	private final NavigableMap<Integer, Polynomial> polynomials = new TreeMap<>();
+	private int maxDegree = 0;
+
+	public void add(Polynomial polynomial) {
+		int degree = polynomial.getDegree();
+		if (maxDegree < degree) maxDegree = degree;
+		if (polynomials.containsKey(degree)) polynomials.get(degree).add(polynomial);
+		else polynomials.put(degree, polynomial);
 	}
 
 	public String getSolution() {
-		EquationType type;
-
-		float A = a.getFactor();
-		float B = b.getFactor();
-		float C = c.getFactor();
-
-		if (A == 0) type = EquationType.LINEAR;
-		else if (B == 0 || c.getFactor() == 0) type = EquationType.INCOMPLETE_QUADRATIC;
-		else type = EquationType.COMPLETE_QUADRATIC;
-
-		Solution solution = new Solution(A, B, C);
+		if (maxDegree > 2) return "The polynomial degree is strictly greater than 2, I can't solve";
+		Polynomial def = new Polynomial();
+		float a = polynomials.getOrDefault(2, def).getFactor();
+		float b = polynomials.getOrDefault(1, def).getFactor();
+		float c = polynomials.getOrDefault(0, def).getFactor();
+		EquationType type = EquationType.getType(a, b, c);
+		Solution solution = new Solution(a, b, c);
 
 		return solution.compute(type).toString();
 	}
 
+	public int getMaxDegree() {
+		return maxDegree;
+	}
+
 	@Override
 	public String toString() {
-		float A = a.getFactor();
-		float B = b.getFactor();
-		float C = c.getFactor();
-
 		StringBuilder res = new StringBuilder();
 
-
-		if (A < 0) {
-			res.append("-");
-			A = -A;
-		}
-		if (A != 0) {
-			res.append(A == 1 ? "" : A).append(Main.variable_name).append("²");
-			if (B < 0) {
-				res.append(" - ");
-				B = -B;
-			} else if (B > 0) res.append(" + ");
-			else {
-				if (C < 0) {
-					res.append(" - ");
-					C = -C;
-				} else if (C > 0) res.append(" + ");
-			}
-		}
-		if (B != 0) {
-			res.append(B == 1 ? "" : B).append(Main.variable_name);
-			if (C < 0) {
-				res.append(" - ");
-				C = -C;
-			} else if (C > 0) res.append(" + ");
-		}
-		if (C != 0) res.append(C);
-		res.append(" = 0");
-		return res.toString();
+		polynomials.descendingMap().forEach((d, p) -> {
+			if (p.isEmpty()) return ;
+			if (res.isEmpty() && !p.isEmpty()) res.append(p.isNegative() ? "-" : "").append(p);
+			else if (!p.isEmpty()) res.append(" ").append(p.getSign()).append(" ").append(p);
+		});
+		return res.append(" = 0").toString();
 	}
 }
