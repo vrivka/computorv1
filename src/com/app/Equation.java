@@ -1,11 +1,11 @@
-package com.computerv1;
+package com.app;
 
 public class Equation {
-	private final Polynom a = new Polynom(0, 2);
-	private final Polynom b = new Polynom(0, 1);
-	private final Polynom c = new Polynom(0, 0);
+	private final Polynomial a = new Polynomial(0, 2);
+	private final Polynomial b = new Polynomial(0, 1);
+	private final Polynomial c = new Polynomial(0, 0);
 
-	public void add(Polynom p) {
+	public void add(Polynomial p) {
 		if (a.isSameDegree(p)) a.add(p);
 		else if (b.isSameDegree(p)) b.add(p);
 		else if (c.isSameDegree(p)) c.add(p);

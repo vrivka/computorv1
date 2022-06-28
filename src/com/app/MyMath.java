@@ -1,4 +1,4 @@
-package com.computerv1;
+package com.app;
 
 public class MyMath {
 	static double sqrt(double n) {

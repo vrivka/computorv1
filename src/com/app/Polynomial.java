@@ -1,17 +1,17 @@
-package com.computerv1;
+package com.app;
 
-public class Polynom {
+public class Polynomial {
 	private boolean negative;
 	private float factor;
 	private final int degree;
 
-	public Polynom(float factor, int degree) {
+	public Polynomial(float factor, int degree) {
 		this.negative = factor < 0;
 		this.factor = factor;
 		this.degree = degree;
 	}
 
-	public void add(Polynom rhs) {
+	public void add(Polynomial rhs) {
 		factor += rhs.factor;
 		negative = factor < 0;
 	}
@@ -20,7 +20,7 @@ public class Polynom {
 		return factor;
 	}
 
-	public boolean isSameDegree(Polynom p) {
+	public boolean isSameDegree(Polynomial p) {
 		return degree == p.degree;
 	}
 
