@@ -55,8 +55,7 @@ public class Polynomial {
 		return isNegative() ? "-" : "+";
 	}
 
-	@Override
-	public String toString() {
+	public String toString(String variableName) {
 		if (isEmpty()) return "";
 		StringBuilder res = new StringBuilder();
 		float f = isNegative() ? -factor : factor;
@@ -65,10 +64,10 @@ public class Polynomial {
 			res.append(f);
 		} else if (degree == 1) {
 			if (f != 1) res.append(f);
-			res.append(Main.variable_name);
+			res.append(variableName);
 		} else {
 			if (f != 1) res.append(f);
-			res.append(Main.variable_name).append("^").append(degree);
+			res.append(variableName).append("^").append(degree);
 		}
 		return res.toString();
 	}

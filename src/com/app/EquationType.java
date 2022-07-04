@@ -1,8 +1,5 @@
 package com.app;
 
-import javax.sql.PooledConnection;
-import java.util.NavigableMap;
-
 public enum EquationType {
 	LINEAR, COMPLETE_QUADRATIC, INCOMPLETE_QUADRATIC;
 	static public EquationType getType(float a, float b, float c) {

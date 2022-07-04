@@ -1,12 +1,18 @@
 package com.app;
 
+import java.util.Arrays;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
 public class Equation {
+	public String variableName = "x";
 	private final NavigableMap<Integer, Polynomial> polynomials = new TreeMap<>();
 	private int maxDegree = 0;
 	private int minDegree = 0;
+
+	public Equation() {
+		polynomials.put(0, new Polynomial());
+	}
 
 	public void add(Polynomial polynomial) {
 		int degree = polynomial.getDegree();
@@ -27,22 +33,45 @@ public class Equation {
 		EquationType type = EquationType.getType(a, b, c);
 		Solution solution = new Solution(a, b, c);
 
-		return solution.compute(type).toString();
+		return solution.compute(type, variableName).toString();
 	}
 
 	public int getMaxDegree() {
 		return maxDegree;
 	}
 
+	public void setVariableName(String equationString) throws ExceptionInInitializerError {
+		String[] a = Arrays.stream(equationString.split("[^a-zA-Z]"))
+				.filter(s -> !s.isEmpty())
+				.distinct()
+				.toArray(String[]::new);
+
+		int variableCount = a.length;
+		if (variableCount == 1)	variableName = a[0];
+		else throw new ExceptionInInitializerError("Equation has more than one variable");
+	}
+
+	public String getVariableName() {
+		return variableName;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder res = new StringBuilder();
 
-		polynomials.descendingMap().forEach((d, p) -> {
-			if (p.isEmpty()) return ;
-			if (res.isEmpty() && !p.isEmpty()) res.append(p.isNegative() ? "-" : "").append(p);
-			else if (!p.isEmpty()) res.append(" ").append(p.getSign()).append(" ").append(p);
+		polynomials.descendingMap().forEach((degree, polynomial) -> {
+			if (polynomial.isEmpty()) return ;
+			if (res.isEmpty() && !polynomial.isEmpty()) {
+				res.append(polynomial.isNegative() ? "-" : "")
+						.append(polynomial.toString(variableName));
+			}
+			else if (!polynomial.isEmpty()) {
+				res.append(" ")
+						.append(polynomial.getSign())
+						.append(" ")
+						.append(polynomial.toString(variableName));
+			}
 		});
-		return res.append(" = 0").toString();
+		return res.append(res.isEmpty() ? "0" : "").append(" = 0").toString();
 	}
 }

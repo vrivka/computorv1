@@ -14,65 +14,65 @@ public class Solution {
 		this.c = c;
 	}
 
-	public Solution compute(EquationType type) {
-		if (type == EquationType.LINEAR) return computeLinear();
-		else if (type == EquationType.COMPLETE_QUADRATIC) return computeCompleteQuadratic();
-		else if (type == EquationType.INCOMPLETE_QUADRATIC) return computeIncompleteQuadratic();
+	public Solution compute(EquationType type, String variableName) {
+		if (type == EquationType.LINEAR) return computeLinear(variableName);
+		else if (type == EquationType.COMPLETE_QUADRATIC) return computeCompleteQuadratic(variableName);
+		else if (type == EquationType.INCOMPLETE_QUADRATIC) return computeIncompleteQuadratic(variableName);
 		return this;
 	}
 
-	private Solution computeLinear() {
+	private Solution computeLinear(String variableName) {
 		if (b == 0 && c == 0)
-			res1 = Main.variable_name + " ∈ ℝ. Variable " + Main.variable_name + " is any real number";
+			res1 = variableName + " ∈ ℝ. Variable " + variableName + " is any real number";
 		else if (b == 0) res1 = "The equation has no solution";
 		else if (c == 0) {
 			System.out.println("The equation is linear, there is one solution:");
-			res1 = Main.variable_name + " = 0";
+			res1 = variableName + " = 0";
 		}
 		else {
 			System.out.println("The equation is linear, there is one solution:");
-			res1 = Main.variable_name + " = " + -(c / b);
+			res1 = variableName + " = " + -(c / b);
 		}
 		return this;
 	}
 
-	private Solution computeCompleteQuadratic() {
+	private Solution computeCompleteQuadratic(String variableName) {
 		double D = b * b - 4 * a * c;
 
 		if (D == 0) {
 			System.out.println("Discriminant is null, the one solution:");
-			res1 = Main.variable_name + " = " + -(b / (2 * a));
+			res1 = variableName + " = " + -(b / (2 * a));
 		}
 		else if (D > 0) {
 			System.out.println("Discriminant is strictly positive, the two solutions are:");
-			res1 = Main.variable_name + "₁ = " + (-b + MyMath.sqrt(D)) / (2 * a);
-			res2 = Main.variable_name + "₂ = " + (-b - MyMath.sqrt(D)) / (2 * a);
+			res1 = variableName + "₁ = " + (-b + MyMath.sqrt(D)) / (2 * a);
+			res2 = variableName + "₂ = " + (-b - MyMath.sqrt(D)) / (2 * a);
 		} else if (D < 0) {
 			System.out.println("Discriminant is strictly positive, the two solutions are:");
 			D = MyMath.sqrt(-D) / (2 * a);
 
-			res1 = Main.variable_name + "₁ = " + -b / (2 * a) + (D < 0 ? " - " + -D : " + " + D) + 'i';
-			res2 = Main.variable_name + "₂ = " + -b / (2 * a) + (D < 0 ? " + " + -D : " - " + D) + 'i';
+			res1 = variableName + "₁ = " + -b / (2 * a) + (D < 0 ? " - " + -D : " + " + D) + 'i';
+			res2 = variableName + "₂ = " + -b / (2 * a) + (D < 0 ? " + " + -D : " - " + D) + 'i';
 		}
 		return this;
 	}
 
-	private Solution computeIncompleteQuadratic() {
+	private Solution computeIncompleteQuadratic(String variableName) {
 		System.out.println("Incomplete quadratic equation, there are two solutions:");
-		if (b == 0 && c == 0) res1 = Main.variable_name + " = 0";
+		if (b == 0 && c == 0) res1 = variableName + " = 0";
 		else if (b == 0) {
 			float res = -c / a;
 
 			if (res > 0) {
-				res1 = Main.variable_name + "₁ = " + MyMath.sqrt(res);
-				res2 = Main.variable_name + "₂ = -" + MyMath.sqrt(res);
+				res1 = variableName + "₁ = " + MyMath.sqrt(res);
+				res2 = variableName + "₂ = -" + MyMath.sqrt(res);
 			} else if (res < 0) {
-				res1 = Main.variable_name + "₁ = " + MyMath.sqrt(-res) + 'i';
-				res2 = Main.variable_name + "₂ = -" + MyMath.sqrt(-res) + 'i';
+				res1 = variableName + "₁ = " + MyMath.sqrt(-res) + 'i';
+				res2 = variableName + "₂ = -" + MyMath.sqrt(-res) + 'i';
 			}
 		} else {
-			res1 = Main.variable_name + "₁ = 0";
-			res2 = Main.variable_name + "₂ = " + -b / a;
+			res1 = variableName + "₁ = 0";
+			res2 = variableName + "₂ = " + -b / a;
 		}
 		return this;
 	}

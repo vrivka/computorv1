@@ -1,15 +1,12 @@
 package com.app;
 
-import java.util.Arrays;
-
 public class Main {
-    static public final String variable_name = "x";
-
     public static void main(String[] args) {
-        String s = " =0";
+        String s = "-4.5n^2 / n^1 - 3.3n + 4 = 0";
 
-        EquationParser ep = new EquationParser(s);
+		EquationCreator e = new EquationCreator(s);
 
-        ep.getEquation();
+		System.out.println(e.getEquation().getSolution());
+		System.out.println(e);
     }
 }
