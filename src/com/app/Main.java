@@ -1,12 +1,16 @@
 package com.app;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        String s = "-4.5n^2 / n^1 - 3.3n + 4 = 0";
+        String s;
+        if (args.length == 0) s = new Scanner(System.in).nextLine();
+        else s = args[0];
+        Equation equation = new EquationCreator(s).getEquation();
 
-		EquationCreator e = new EquationCreator(s);
-
-		System.out.println(e.getEquation().getSolution());
-		System.out.println(e);
+        System.out.println("Reduced form: " + equation);
+        System.out.println("Polynomial degree: " + equation.getMaxDegree());
+        System.out.println(equation.getSolution());
     }
 }

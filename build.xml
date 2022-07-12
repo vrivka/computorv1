@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <project name="computerv1" default="run">
-    <property name="src" location="src"/>
-    <property name="build" location="build"/>
+    <property name="home_path" location="/Users/vrivka/computorv1"/>
+    <property name="src" location="${home_path}/src"/>
+    <property name="build" location="${home_path}/build"/>
     <property name="classes" location="${build}/classes/"/>
     <target name="compile">
         <mkdir dir="${classes}"/>
