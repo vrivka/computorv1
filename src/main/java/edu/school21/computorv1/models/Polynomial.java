@@ -1,4 +1,6 @@
-package com.app;
+package edu.school21.computorv1.models;
+
+import edu.school21.computorv1.math.MyMath;
 
 public class Polynomial {
 	private int degree = 0;
@@ -14,7 +16,9 @@ public class Polynomial {
 	}
 
 	public void add(Polynomial rhs) {
-		if (degree != rhs.degree) return ;
+		if (degree != rhs.degree) {
+			return;
+		}
 		factor += rhs.factor;
 		negative = factor < 0;
 	}
@@ -56,19 +60,25 @@ public class Polynomial {
 	}
 
 	public String toString(String variableName) {
-		if (isEmpty()) return "";
-		StringBuilder res = new StringBuilder();
-		float f = isNegative() ? -factor : factor;
+		if (isEmpty()) {
+			return "";
+		}
+		StringBuilder result = new StringBuilder();
+		double absFactor = MyMath.abs(factor);
 
 		if (degree == 0) {
-			res.append(f);
+			result.append(absFactor);
 		} else if (degree == 1) {
-			if (f != 1) res.append(f);
-			res.append(variableName);
+			if (absFactor != 1) {
+				result.append(absFactor);
+			}
+			result.append(variableName);
 		} else {
-			if (f != 1) res.append(f);
-			res.append(variableName).append("^").append(degree);
+			if (absFactor != 1) {
+				result.append(absFactor);
+			}
+			result.append(variableName).append("^").append(degree);
 		}
-		return res.toString();
+		return result.toString();
 	}
 }
