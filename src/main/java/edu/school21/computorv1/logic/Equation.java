@@ -2,7 +2,6 @@ package edu.school21.computorv1.logic;
 
 import edu.school21.computorv1.logic.exceptions.MultivariableError;
 import edu.school21.computorv1.models.Polynomial;
-import edu.school21.computorv1.utils.Printer;
 
 import java.util.Arrays;
 import java.util.NavigableMap;
