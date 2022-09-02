@@ -1,5 +1,6 @@
 package edu.school21.computorv1.logic;
 
+import edu.school21.computorv1.logic.exceptions.SyntaxError;
 import edu.school21.computorv1.models.Polynomial;
 
 import java.util.Arrays;
@@ -9,18 +10,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EquationCreator {
-    static public final String allowedSymbols = "+/=xfd";
-    private String equationString;
-    private Float[] nums;
-    private final Equation equation = new Equation();
+    private static final String ALLOWED_SYMBOLS = "+/=xfd";
+    private static Float[] nums;
 
-    public EquationCreator(String equationString) throws ExceptionInInitializerError {
+    public static Equation getEquation(String equationString) {
+        Equation equation = new Equation();
+
         equation.setVariableName(equationString);
-        this.equationString = equationString.replaceAll(" ", "")
+        equationString = equationString.replaceAll(" ", "")
                 .replaceAll(equation.getVariableName(), "x");
+        equationString = setNums(equationString);
+
+        if (!containAllowedSymbols(equationString)) {
+            throw new SyntaxError("Equation string has illegal symbols");
+        }
+
+        String[] twoSides = equationString.split("=");
+
+        if (twoSides.length != 2) {
+            throw new SyntaxError("More than one equal sign");
+        }
+
+        int numIndex = loadPolynomials(equation, twoSides[0], new Polynomial(1, 0), 0);
+
+        loadPolynomials(equation, twoSides[1], new Polynomial(-1, 0), numIndex);
+        return equation;
     }
 
-    private void setNums() throws NumberFormatException {
+    private static String setNums(String equationString) throws NumberFormatException {
         Pattern pattern = Pattern.compile("[-]?\\d+(\\.\\d+)?");
         Matcher matcher = pattern.matcher(equationString);
 
@@ -29,33 +46,14 @@ public class EquationCreator {
                 .map(Float::parseFloat)
                 .toArray(Float[]::new);
 
-        equationString = equationString
+        return equationString
                 .replaceAll("\\d+(\\.\\d+)?", "f")
                 .replaceAll("x\\^f", "d")
                 .replaceAll("[*]", "")
                 .replaceAll("-", "+");
     }
 
-    public Equation getEquation() {
-        setNums();
-
-        if (!containAllowedSymbols()) {
-            throw new IllegalArgumentException("Equation string has illegal symbols");
-        }
-
-        String[] twoSides = equationString.split("=");
-
-        if (twoSides.length != 2) {
-            throw new IllegalArgumentException("More than one equal sign");
-        }
-
-        int numIndex = loadPolynomials(twoSides[0], new Polynomial(1, 0), 0);
-
-        loadPolynomials(twoSides[1], new Polynomial(-1, 0), numIndex);
-        return equation;
-    }
-
-    private int loadPolynomials(String side, Polynomial sign, int numIndex) {
+    private static int loadPolynomials(Equation equation, String side, Polynomial sign, int numIndex) {
         String[] splitPolynomials = Arrays.stream(side.split("\\+"))
                 .filter(str -> !str.isEmpty())
                 .toArray(String[]::new);
@@ -92,15 +90,9 @@ public class EquationCreator {
         return numIndex;
     }
 
-    private boolean containAllowedSymbols() {
+    private static boolean containAllowedSymbols(String equationString) {
         return equationString.chars()
                 .distinct()
-                .allMatch(c -> allowedSymbols.contains(String.valueOf((char) c)));
-    }
-
-    @Override
-    public String toString() {
-        return equationString + '\n' +
-                Arrays.toString(nums);
+                .allMatch(c -> ALLOWED_SYMBOLS.contains(String.valueOf((char) c)));
     }
 }

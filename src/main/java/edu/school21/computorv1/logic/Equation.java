@@ -1,18 +1,27 @@
 package edu.school21.computorv1.logic;
 
+import edu.school21.computorv1.logic.exceptions.MultivariableError;
 import edu.school21.computorv1.models.Polynomial;
+import edu.school21.computorv1.utils.Printer;
 
 import java.util.Arrays;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import static edu.school21.computorv1.utils.Printer.getIncorrectString;
+import static edu.school21.computorv1.utils.Printer.interSteps;
+
 public class Equation {
-    private String variableName = "x";
-    private final NavigableMap<Integer, Polynomial> polynomials = new TreeMap<>();
-    private int maxDegree = 0;
-    private int minDegree = 0;
+    private final NavigableMap<Integer, Polynomial> polynomials;
+    private String variableName;
+    private int maxDegree;
+    private int minDegree;
 
     public Equation() {
+        this.variableName = "x";
+        this.maxDegree = 0;
+        this.minDegree = 0;
+        this.polynomials = new TreeMap<>();
         polynomials.put(0, new Polynomial());
     }
 
@@ -34,19 +43,22 @@ public class Equation {
 
     public String getSolutionString() {
         if (maxDegree < 0) {
-            return "The polynomial degree is strictly less than 0, I can't solve";
+            return getIncorrectString("The polynomial degree is strictly less than 0, I can't solve");
         } else if (maxDegree > 2) {
-            return "The polynomial degree is strictly greater than 2, I can't solve";
+            return getIncorrectString("The polynomial degree is strictly greater than 2, I can't solve");
         }
 
         Polynomial def = new Polynomial();
         float a = polynomials.getOrDefault(2, def).getFactor();
         float b = polynomials.getOrDefault(1, def).getFactor();
         float c = polynomials.getOrDefault(0, def).getFactor();
-        EquationType type = EquationType.getType(a, b, c);
-        Solution solution = new Solution(a, b, c);
 
-        return solution.compute(type, variableName).toString();
+        interSteps("Factors:\n\ta = " + a + "\n\tb = " + b + "\n\tc = " + c);
+
+        EquationType type = EquationType.getType(a, b, c);
+        Solution solution = new Solution(a, b, c, variableName);
+
+        return solution.compute(type).toString();
     }
 
     public int getMaxDegree() {
@@ -62,8 +74,8 @@ public class Equation {
 
         if (variableCount == 1) {
             variableName = a[0];
-        } else {
-            throw new ExceptionInInitializerError("Equation has more than one variable");
+        } else if (variableCount > 1) {
+            throw new MultivariableError("Equation has more than one variable");
         }
     }
 

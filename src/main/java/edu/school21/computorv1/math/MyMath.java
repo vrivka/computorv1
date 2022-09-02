@@ -2,15 +2,14 @@ package edu.school21.computorv1.math;
 
 public class MyMath {
     public static double sqrt(double number) {
+        double result;
+
         if (number < 0) {
             return Double.NaN;
-        } else if (number == 0d) {
-            return 0d;
-        } else if (number == 1d) {
-            return 1d;
+        } else if (number == 0d || number == 1d) {
+            return number;
         }
-
-        double result = 1d;
+        result = 1d;
 
         while (true) {
             double tmp = (result + number / result) / 2;
